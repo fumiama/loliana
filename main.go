@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"runtime"
 	"sync"
+	"time"
 
 	sqlite "github.com/FloatTech/sqlite"
 	para "github.com/fumiama/go-hide-param"
@@ -78,6 +79,7 @@ func main() {
 		wg.Add(1)
 		logrus.Println("scanning from", i*cntperthread, "to", (i+1)*cntperthread)
 		go scan(items[i*cntperthread:(i+1)*cntperthread], db)
+		time.Sleep(time.Millisecond * 100)
 	}
 	wg.Add(1)
 	logrus.Println("scanning from", i*cntperthread, "to", len(items))
