@@ -10,6 +10,7 @@ import (
 	"os"
 	"regexp"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -89,6 +90,7 @@ func main() {
 }
 
 func scan(items ItemList, db *sqlite.Sqlite) {
+	client := &http.Client{}
 	for _, item := range items {
 		pidp := pidpreg.FindString(item.Original)
 		mu.RLock()
@@ -97,7 +99,11 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 			continue
 		}
 		mu.RUnlock()
-		resp, err := http.Get(item.Original)
+		request, _ := http.NewRequest("GET", strings.ReplaceAll(item.Original, "i.pixiv.cat", "i.pximg.net"), nil)
+		request.Header.Set("Host", "i.pximg.net")
+		request.Header.Set("Referer", "https://www.pixiv.net/")
+		request.Header.Set("Accept", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0")
+		resp, err := client.Do(request)
 		if err != nil {
 			logrus.Errorln("get img", pidp, "resp error:", err)
 			continue
@@ -111,7 +117,7 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 		dp := datepathreg.FindString(item.Original)
 		stat, dh := storage.SaveImgBytes(data, "img", true, 0)
 		if dh == "" {
-			logrus.Errorln("save img", pidp, "bytes error:", stat)
+			logrus.Errorln("save img", pidp, "bytes error:", stat, "data:", imago.BytesToString(data))
 			continue
 		}
 		m := md5.Sum(data)
