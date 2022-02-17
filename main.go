@@ -10,6 +10,7 @@ import (
 	"os"
 	"regexp"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -98,7 +99,7 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 			continue
 		}
 		mu.RUnlock()
-		request, _ := http.NewRequest("GET", item.Original, nil)
+		request, _ := http.NewRequest("GET", strings.ReplaceAll(item.Original, "i.pixiv.cat", "i.pximg.net"), nil)
 		request.Header.Set("Host", "i.pximg.net")
 		request.Header.Set("Referer", "https://www.pixiv.net/")
 		request.Header.Set("Accept", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0")
