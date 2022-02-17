@@ -117,7 +117,7 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 		dp := datepathreg.FindString(item.Original)
 		stat, dh := storage.SaveImgBytes(data, "img", true, 0)
 		if dh == "" {
-			logrus.Errorln("save img", pidp, "bytes error:", stat, "data:", imago.BytesToString(data))
+			logrus.Errorln("save img", pidp, "bytes error:", stat)
 			continue
 		}
 		m := md5.Sum(data)
