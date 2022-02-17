@@ -2,10 +2,12 @@ package main
 
 import (
 	"crypto/md5"
+	"crypto/tls"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
 	"regexp"
@@ -31,6 +33,11 @@ var (
 	wg          sync.WaitGroup
 	pidpreg     = regexp.MustCompile(`\d+_p\d+`)
 	datepathreg = regexp.MustCompile(`\d{4}/\d{2}/d{2}/d{2}/d{2}/d{2}`)
+	// P站 无污染 IP 地址
+	IPTables = map[string]string{
+		"pixiv.net":   "210.140.92.183:443",
+		"i.pximg.net": "210.140.92.147:443",
+	}
 )
 
 func main() {
@@ -90,7 +97,22 @@ func main() {
 }
 
 func scan(items ItemList, db *sqlite.Sqlite) {
-	client := &http.Client{}
+	// P站特殊客户端
+	client := &http.Client{
+		// 解决中国大陆无法访问的问题
+		Transport: &http.Transport{
+			DisableKeepAlives: false,
+			// 隐藏 sni 标志
+			TLSClientConfig: &tls.Config{
+				ServerName:         "-",
+				InsecureSkipVerify: true,
+			},
+			// 更改 dns
+			Dial: func(network, addr string) (net.Conn, error) {
+				return net.Dial("tcp", IPTables["i.pximg.net"])
+			},
+		},
+	}
 	for _, item := range items {
 		pidp := pidpreg.FindString(item.Original)
 		mu.RLock()
