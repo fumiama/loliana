@@ -16,8 +16,8 @@ github.com/fumiama/go-hide-param v0.1.4 h1:y7TRTzZMdCH9GOXnIzU3B+1BSkcmvejVGmGsz
 github.com/fumiama/go-hide-param v0.1.4/go.mod h1:vJkQlJIEI56nIyp7tCQu1/2QOyKtZpudsnJkGk9U1aY=
 github.com/fumiama/gofastTEA v0.0.6 h1:Yni3MXDbJVa/c4CecgdZDgCJK+fLdvGph+OBqY2mtiI=
 github.com/fumiama/gofastTEA v0.0.6/go.mod h1:+sBZ05nCA2skZkursHNvyr8kULlEetrYTM2y5kA4rQc=
-github.com/fumiama/imago v1.1.5 h1:zEj7cWEj1bPRLhV3AcKB2QZtRkUZDpSPKg0Q8jiMmj4=
-github.com/fumiama/imago v1.1.5/go.mod h1:wJ2zX9wtDxfolF7OKwj4NvUR62a468A6v4X2bUrdYLI=
+github.com/fumiama/imago v1.1.6 h1:zeCk1ALwpmyXMd2eMfzYD6KBvHj6cjaKuKvNcYMvVa0=
+github.com/fumiama/imago v1.1.6/go.mod h1:wJ2zX9wtDxfolF7OKwj4NvUR62a468A6v4X2bUrdYLI=
 github.com/fumiama/simple-storage v0.0.0-20220107131337-1183d78fffd5 h1:8QOMi3IJReNlEnuePpWA9Mfrey3xGNnW1VvqkXNLWZ4=
 github.com/fumiama/simple-storage v0.0.0-20220107131337-1183d78fffd5/go.mod h1:ZL+V3VULLrhLhjio/qoG8w1C7E0dr2AnsmkI35IUoY0=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
