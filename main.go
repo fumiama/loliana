@@ -15,6 +15,7 @@ import (
 	"time"
 
 	sqlite "github.com/FloatTech/sqlite"
+	base14 "github.com/fumiama/go-base16384"
 	para "github.com/fumiama/go-hide-param"
 	"github.com/fumiama/imago"
 	"github.com/sirupsen/logrus"
@@ -141,12 +142,18 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 			DatePath: dp,
 		})
 		for _, tag := range item.Tags {
-			err = db.Create(tag, &database.Tag{})
+			name, err := base14.UTF16be2utf8(base14.EncodeString(tag))
+			if err != nil {
+				logrus.Errorln("encode tag", tag, "error:", err)
+				continue
+			}
+			t := imago.BytesToString(name)
+			err = db.Create(t, &database.Tag{})
 			if err != nil {
 				logrus.Errorln("create tag", tag, "error:", err)
 				continue
 			}
-			err = db.Insert(tag, &database.Tag{
+			err = db.Insert(t, &database.Tag{
 				PidP: pidp,
 				UID:  item.UID,
 			})
