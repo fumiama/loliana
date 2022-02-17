@@ -2,17 +2,14 @@ package main
 
 import (
 	"crypto/md5"
-	"crypto/tls"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"os"
 	"regexp"
 	"runtime"
-	"strings"
 	"sync"
 	"time"
 
@@ -33,11 +30,6 @@ var (
 	wg          sync.WaitGroup
 	pidpreg     = regexp.MustCompile(`\d+_p\d+`)
 	datepathreg = regexp.MustCompile(`\d{4}/\d{2}/d{2}/d{2}/d{2}/d{2}`)
-	// P站 无污染 IP 地址
-	IPTables = map[string]string{
-		"pixiv.net":   "210.140.92.183:443",
-		"i.pximg.net": "210.140.92.147:443",
-	}
 )
 
 func main() {
@@ -97,22 +89,6 @@ func main() {
 }
 
 func scan(items ItemList, db *sqlite.Sqlite) {
-	// P站特殊客户端
-	client := &http.Client{
-		// 解决中国大陆无法访问的问题
-		Transport: &http.Transport{
-			DisableKeepAlives: false,
-			// 隐藏 sni 标志
-			TLSClientConfig: &tls.Config{
-				ServerName:         "-",
-				InsecureSkipVerify: true,
-			},
-			// 更改 dns
-			Dial: func(network, addr string) (net.Conn, error) {
-				return net.Dial("tcp", IPTables["i.pximg.net"])
-			},
-		},
-	}
 	for _, item := range items {
 		pidp := pidpreg.FindString(item.Original)
 		mu.RLock()
@@ -121,11 +97,7 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 			continue
 		}
 		mu.RUnlock()
-		request, _ := http.NewRequest("GET", strings.ReplaceAll(item.Original, "i.pixiv.cat", "i.pximg.net"), nil)
-		request.Header.Set("Host", "i.pximg.net")
-		request.Header.Set("Referer", "https://www.pixiv.net/")
-		request.Header.Set("Accept", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0")
-		resp, err := client.Do(request)
+		resp, err := http.Get(item.Original)
 		if err != nil {
 			logrus.Errorln("get img", pidp, "resp error:", err)
 			continue
