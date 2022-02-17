@@ -31,7 +31,7 @@ var (
 	mu          sync.RWMutex
 	wg          sync.WaitGroup
 	pidpreg     = regexp.MustCompile(`\d+_p\d+`)
-	datepathreg = regexp.MustCompile(`\d{4}/\d{2}/d{2}/d{2}/d{2}/d{2}`)
+	datepathreg = regexp.MustCompile(`\d{4}/\d{2}/\d{2}/\d{2}/\d{2}/\d{2}`)
 )
 
 func main() {
