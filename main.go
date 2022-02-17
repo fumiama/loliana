@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/md5"
+	"crypto/tls"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -87,6 +88,16 @@ func main() {
 }
 
 func scan(items ItemList, db *sqlite.Sqlite) {
+	client := &http.Client{
+		Transport: &http.Transport{
+			DisableKeepAlives: false,
+			// 隐藏 sni 标志
+			TLSClientConfig: &tls.Config{
+				ServerName:         "-",
+				InsecureSkipVerify: true,
+			},
+		},
+	}
 	for _, item := range items {
 		pidp := pidpreg.FindString(item.Original)
 		mu.RLock()
@@ -99,7 +110,7 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 		request.Header.Set("Host", "i.pximg.net")
 		request.Header.Set("Referer", "https://www.pixiv.net/")
 		request.Header.Set("Accept", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0")
-		resp, err := http.DefaultClient.Do(request)
+		resp, err := client.Do(request)
 		if err != nil {
 			logrus.Errorln("get img", pidp, "resp error:", err)
 			continue
