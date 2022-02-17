@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/md5"
-	"crypto/tls"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -88,16 +87,7 @@ func main() {
 }
 
 func scan(items ItemList, db *sqlite.Sqlite) {
-	client := &http.Client{
-		Transport: &http.Transport{
-			DisableKeepAlives: false,
-			// 隐藏 sni 标志
-			TLSClientConfig: &tls.Config{
-				ServerName:         "-",
-				InsecureSkipVerify: true,
-			},
-		},
-	}
+	client := &http.Client{}
 	for _, item := range items {
 		pidp := pidpreg.FindString(item.Original)
 		mu.RLock()
