@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/FloatTech/sqlite v0.1.3
+	github.com/fumiama/go-base16384 v1.2.1
 	github.com/fumiama/go-hide-param v0.1.4
 	github.com/fumiama/imago v1.1.6
 	github.com/sirupsen/logrus v1.8.1
@@ -11,7 +12,6 @@ require (
 
 require (
 	github.com/corona10/goimagehash v1.0.3 // indirect
-	github.com/fumiama/go-base16384 v1.2.1 // indirect
 	github.com/fumiama/gofastTEA v0.0.6 // indirect
 	github.com/fumiama/simple-storage v0.0.0-20220107131337-1183d78fffd5 // indirect
 	github.com/google/uuid v1.3.0 // indirect
