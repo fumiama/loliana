@@ -71,6 +71,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	_ = inpf.Close()
 
 	totalcnt := len(items)
 	n := runtime.NumCPU()
