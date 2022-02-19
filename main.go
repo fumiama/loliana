@@ -95,7 +95,7 @@ func scan(items ItemList, db *sqlite.Sqlite) {
 	for _, item := range items {
 		pidp := pidpreg.FindString(item.Original)
 		mu.RLock()
-		if db.CanFind("picture", "where pidp="+pidp) {
+		if db.CanFind("picture", "where pidp='"+pidp+"'") {
 			mu.RUnlock()
 			continue
 		}
